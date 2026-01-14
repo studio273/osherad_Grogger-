@@ -185,8 +185,13 @@
         @media (max-width: 600px) {
             .container {
                 padding: 1rem;
-                width: 90%;
-                border-radius: 1.5rem;
+                width: 95%; /* Use more width on mobile */
+                
+                /* Remove white background layer on mobile */
+                background: transparent;
+                box-shadow: none;
+                border: none;
+                backdrop-filter: none;
             }
             .logo-img { max-width: 180px; margin-bottom: 0.5rem; }
             .brand-text { font-size: 2.2rem; margin-bottom: 0.5rem; }
