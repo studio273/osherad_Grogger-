@@ -13,7 +13,7 @@
     <meta property="og:image:height" content="630">
     <meta property="og:type" content="website">
 
-    <!-- Import Google Font (Assistant) for Hebrew support similar to Google Sans -->
+    <!-- Import Google Font (Assistant) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -29,7 +29,6 @@
         body {
             margin: 0;
             padding: 0;
-            /* Updated Font Family to Google Sans style */
             font-family: 'Google Sans', 'Assistant', sans-serif;
             background-color: var(--bg-color);
             display: flex;
@@ -59,9 +58,9 @@
             background: rgba(255, 255, 255, 0.95);
             padding: 2rem;
             border-radius: 2rem;
-            box-shadow: 0 10px 25px rgba(13, 31, 67, 0.15); /* Shadow using primary color */
+            box-shadow: 0 10px 25px rgba(13, 31, 67, 0.15);
             max-width: 95%;
-            width: 500px; /* Widened slightly for 3 columns */
+            width: 500px;
             z-index: 1;
             position: relative;
             backdrop-filter: blur(5px);
@@ -69,7 +68,7 @@
             transition: all 0.3s ease;
         }
 
-        /* Restored Logo Styles */
+        /* Logo Styles */
         .logo-img {
             display: inline-block;
             max-width: 250px;
@@ -99,7 +98,7 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 columns */
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
             margin-bottom: 2rem;
         }
@@ -108,7 +107,7 @@
             aspect-ratio: 1;
             border: none;
             border-radius: 1rem;
-            font-size: 4rem; /* Big icons desktop */
+            font-size: 4rem;
             cursor: pointer;
             transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
@@ -138,7 +137,6 @@
             line-height: 1.1;
         }
 
-        /* SVG responsiveness inside button */
         .sound-btn svg {
             width: 70px;
             height: 70px;
@@ -146,23 +144,19 @@
             max-height: 60%;
         }
 
-        /* Styles using ONLY the 3 strict colors */
-        
-        /* Red Buttons */
+        /* Colors */
         .btn-truck, .btn-drill, .btn-cans { 
             background: var(--tertiary-color); 
             box-shadow: 0 6px 0 #a01b20; 
         }
         .btn-truck:active, .btn-drill:active, .btn-cans:active { box-shadow: 0 0 0 #a01b20; }
 
-        /* Light Blue Buttons */
         .btn-horn, .btn-scanner, .btn-cymbals { 
             background: var(--secondary-color); 
             box-shadow: 0 6px 0 #127ba8; 
         }
         .btn-horn:active, .btn-scanner:active, .btn-cymbals:active { box-shadow: 0 0 0 #127ba8; }
 
-        /* Dark Blue Buttons */
         .btn-pots, .btn-shaker, .btn-gragger { 
             background: var(--primary-color); 
             box-shadow: 0 6px 0 #07122a; 
@@ -187,55 +181,23 @@
             transition: height 0.1s;
         }
 
-        /* --- Mobile Responsiveness --- */
+        /* Mobile Responsiveness */
         @media (max-width: 600px) {
             .container {
                 padding: 1rem;
                 width: 90%;
                 border-radius: 1.5rem;
             }
-
-            .logo-img {
-                max-width: 180px;
-                margin-bottom: 0.5rem;
-            }
-
-            .brand-text {
-                font-size: 2.2rem; /* Smaller title */
-                margin-bottom: 0.5rem;
-            }
-
-            .festive-text {
-                font-size: 1rem;
-                margin-bottom: 1rem;
-            }
-
-            .grid {
-                gap: 0.8rem; /* Smaller gap between buttons */
-            }
-
-            .sound-btn {
-                font-size: 2.5rem; /* Smaller emoji */
-                border-radius: 0.8rem;
-                box-shadow: 0 4px 0 rgba(0,0,0,0.15);
-            }
-            
-            .sound-btn:active, .sound-btn.playing {
-                transform: translateY(4px);
-            }
-
-            .sound-btn svg {
-                width: 45px; /* Smaller SVG */
-                height: 45px;
-            }
-
-            .sound-btn span.label {
-                font-size: 0.75rem; /* Smaller label */
-                margin-top: 0.2rem;
-            }
+            .logo-img { max-width: 180px; margin-bottom: 0.5rem; }
+            .brand-text { font-size: 2.2rem; margin-bottom: 0.5rem; }
+            .festive-text { font-size: 1rem; margin-bottom: 1rem; }
+            .grid { gap: 0.8rem; }
+            .sound-btn { font-size: 2.5rem; border-radius: 0.8rem; box-shadow: 0 4px 0 rgba(0,0,0,0.15); }
+            .sound-btn:active, .sound-btn.playing { transform: translateY(4px); }
+            .sound-btn svg { width: 45px; height: 45px; }
+            .sound-btn span.label { font-size: 0.75rem; margin-top: 0.2rem; }
         }
         
-        /* For very small screens */
         @media (max-width: 360px) {
             .brand-text { font-size: 1.8rem; }
             .grid { gap: 0.5rem; }
@@ -249,7 +211,6 @@
     <canvas id="confetti-canvas"></canvas>
 
     <div class="container">
-        <!-- Logo hidden from UI but maintained in structure if needed later -->
         <img src="https://i.ibb.co/Mkkwg3Kb/Screenshot-2026-01-12-at-12-54-47.png" alt="לוגו המרעישון" class="logo-img">
         
         <div class="brand-text">הרעשן של אושר עד</div>
@@ -280,49 +241,31 @@
                 <span class="label">ביפ קופה</span>
             </button>
             <button class="sound-btn btn-drill" onclick="playSound('drill')" aria-label="רעש מקדחה">
-                <!-- Specific Electric Drill Shape -->
+                <!-- Exact Shape Electric Drill SVG -->
                 <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Handle & Body Base (Dark Blue) -->
-                    <path d="M9 12L8 17H13L14 12H9Z" fill="#0d1f43"/>
-                    <path d="M7 17H14V20C14 20.6 13.6 21 13 21H8C7.4 21 7 20.6 7 20V17Z" fill="#0d1f43"/>
-                    
-                    <!-- Main Housing (Light Blue) - Angled top -->
-                    <path d="M5 5H16L17 7V10L16 12H5V5Z" fill="#1a9bd2"/>
-                    
-                    <!-- Chuck (Front rotating part) - Red & Details -->
-                    <path d="M17 6.5H19C19.6 6.5 20 6.9 20 7.5V9.5C20 10.1 19.6 10.5 19 10.5H17V6.5Z" fill="#cf242b"/>
-                    <rect x="17.5" y="7" width="1.5" height="3" fill="#0d1f43" fill-opacity="0.3"/>
-                    
-                    <!-- Torque Selector Ring (Red) -->
-                    <rect x="15" y="6" width="2" height="5" rx="0.5" fill="#cf242b"/>
-                    
-                    <!-- Trigger (Red) -->
-                    <path d="M13 12H11V14C11 14.6 11.4 15 12 15C12.6 15 13 14.6 13 14V12Z" fill="#cf242b"/>
-                    
-                    <!-- Motor Vents (White) -->
-                    <rect x="6" y="6.5" width="4" height="1" rx="0.5" fill="white" fill-opacity="0.5"/>
-                    <rect x="6" y="8.5" width="4" height="1" rx="0.5" fill="white" fill-opacity="0.5"/>
-                    
-                    <!-- Direction Button (Dark Blue detail) -->
-                    <circle cx="10" cy="8" r="1" fill="#0d1f43" fill-opacity="0.3"/>
+                    <path d="M8 17H13.5L14 18.5V21C14 21.6 13.6 22 13 22H9C8.4 22 8 21.6 8 21V18.5L8 17Z" fill="#0d1f43"/>
+                    <path d="M10 11L9 17H13.5L14 11H10Z" fill="#0d1f43"/>
+                    <path d="M5.5 5H16.5C17.5 5 18 5.5 18 7V9.5C18 10.5 17.5 11 16.5 11H5.5V5Z" fill="#1a9bd2"/>
+                    <path d="M18 6.5H20C20.6 6.5 21 6.9 21 7.5V9C20.5 9.6 20.1 10 19.5 10H18V6.5Z" fill="#cf242b"/>
+                    <rect x="18" y="7" width="1" height="2.5" fill="#0d1f43" fill-opacity="0.4"/>
+                    <rect x="16" y="5.5" width="2" height="5.5" rx="0.5" fill="#cf242b"/>
+                    <path d="M13.5 11.5H11.5V13.5C11.5 14 12 14.5 12.5 14.5C13 14.5 13.5 14 13.5 13.5V11.5H13.5Z" fill="#cf242b"/>
+                    <rect x="7" y="6" width="3" height="1" rx="0.5" fill="white" fill-opacity="0.5"/>
+                    <rect x="7" y="8" width="3" height="1" rx="0.5" fill="white" fill-opacity="0.5"/>
+                    <circle cx="12" cy="8" r="1.5" fill="#0d1f43" fill-opacity="0.2"/>
                 </svg>
                 <span class="label">רעש מקדחה</span>
             </button>
 
             <!-- Row 3 -->
             <button class="sound-btn btn-gragger" onclick="playSound('gragger')" aria-label="רעשן">
-                <!-- Solid Filled Ra'ashan Shape - Large -->
+                <!-- Solid Filled Ra'ashan Shape -->
                 <svg width="70" height="70" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Handle (Dark Blue) -->
                     <path d="M10.5 13V20C10.5 21.1 11.4 22 12.5 22C13.6 22 14.5 21.1 14.5 20V13" fill="#0d1f43"/>
-                    <!-- Gear Axis (Red) -->
                     <circle cx="12.5" cy="8.5" r="2.5" fill="#cf242b"/>
-                    <!-- Main Box Body (Light Blue) -->
                     <path d="M19.5 4H5.5C4.4 4 3.5 4.9 3.5 6V11C3.5 12.1 4.4 13 5.5 13H19.5C20.6 13 21.5 12.1 21.5 11V6C21.5 4.9 20.6 4 19.5 4Z" fill="#1a9bd2"/>
-                    <!-- Box Detail/Highlights -->
                     <rect x="5.5" y="6" width="14" height="2" rx="1" fill="#FFFFFF" fill-opacity="0.3"/>
                     <rect x="5.5" y="9" width="14" height="2" rx="1" fill="#FFFFFF" fill-opacity="0.3"/>
-                    <!-- The Flapper/Tongue (Red) -->
                     <path d="M12.5 4V2" stroke="#cf242b" stroke-width="3" stroke-linecap="round"/>
                 </svg>
                 <span class="label">רעשן</span>
@@ -351,8 +294,6 @@
         const canvas = document.getElementById('confetti-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        
-        // STRICT Color Palette for Confetti
         const confettiColors = ['#0d1f43', '#1a9bd2', '#cf242b'];
 
         function resizeCanvas() {
@@ -363,11 +304,7 @@
         resizeCanvas();
 
         class Particle {
-            constructor() {
-                this.reset();
-                this.y = Math.random() * canvas.height; // Start scattered
-            }
-
+            constructor() { this.reset(); this.y = Math.random() * canvas.height; }
             reset() {
                 this.x = Math.random() * canvas.width;
                 this.y = -20;
@@ -379,98 +316,111 @@
                 this.rotationSpeed = (Math.random() - 0.5) * 5;
                 this.shape = Math.random() > 0.5 ? 'square' : 'circle';
             }
-
             update() {
                 this.y += this.speedY;
                 this.x += Math.sin(this.y * 0.01) + this.speedX;
                 this.rotation += this.rotationSpeed;
-
-                if (this.y > canvas.height + 20) {
-                    this.reset();
-                }
+                if (this.y > canvas.height + 20) this.reset();
             }
-
             draw() {
                 ctx.save();
                 ctx.translate(this.x, this.y);
                 ctx.rotate(this.rotation * Math.PI / 180);
                 ctx.fillStyle = this.color;
-                
-                if (this.shape === 'square') {
-                    ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
-                } else {
-                    ctx.beginPath();
-                    ctx.arc(0, 0, this.size/2, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                
+                if (this.shape === 'square') ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+                else { ctx.beginPath(); ctx.arc(0, 0, this.size/2, 0, Math.PI * 2); ctx.fill(); }
                 ctx.restore();
             }
         }
 
         function initConfetti() {
             particles = [];
-            for(let i = 0; i < 50; i++) {
-                particles.push(new Particle());
-            }
+            for(let i = 0; i < 50; i++) particles.push(new Particle());
             animateConfetti();
         }
 
         function animateConfetti() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
+            particles.forEach(p => { p.update(); p.draw(); });
             requestAnimationFrame(animateConfetti);
         }
-
         initConfetti();
 
-        // --- Audio Context Setup ---
+        // --- GLOBAL AUDIO MANAGER (PRELOADER & CONTROLLER) ---
         let audioCtx;
+        let activeNodes = []; // Tracks all playing oscillators/buffer sources to stop them instantly
+
+        // URLs converted to raw format for playing
+        const soundFiles = {
+            'gragger': 'https://raw.githubusercontent.com/studio273/osherad_Grogger-/main/SOUNDS/WhatsApp%20Audio%202026-01-14%20at%2011.26.13.mp3',
+            'horn': 'https://raw.githubusercontent.com/studio273/osherad_Grogger-/main/SOUNDS/air-horn-186076.mp3',
+            'cans': 'https://raw.githubusercontent.com/studio273/osherad_Grogger-/main/SOUNDS/falling-can-1-401154.mp3',
+            // Updated Drill Sound URL
+            'drill': 'https://raw.githubusercontent.com/studio273/osherad_Grogger-/main/bbc_cars--main_07066045_%5Bcut_4sec%5D.mp3',
+            'cymbals': 'https://raw.githubusercontent.com/studio273/osherad_Grogger-/main/SOUNDS/accoustic-drum-one-shot-overhead-1-447116.mp3'
+        };
+
+        const audioBuffers = {}; // Store decoded audio here
 
         function initAudio() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                preloadSounds(); // Start loading immediately once we have context
             }
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
             }
         }
 
-        // --- Sound Generation Functions (Mixed: Synth + Files) ---
+        // Preload function: Fetches and decodes all files to memory
+        async function preloadSounds() {
+            for (const [key, url] of Object.entries(soundFiles)) {
+                try {
+                    const response = await fetch(url);
+                    const arrayBuffer = await response.arrayBuffer();
+                    audioBuffers[key] = await audioCtx.decodeAudioData(arrayBuffer);
+                    console.log(`Loaded ${key}`);
+                } catch (e) {
+                    console.error(`Failed to load ${key}`, e);
+                }
+            }
+        }
+
+        // Master Stop Function: Kills all noise immediately
+        function stopAllSounds() {
+            activeNodes.forEach(node => {
+                try {
+                    if (node.stop) node.stop();
+                    node.disconnect();
+                } catch(e) {}
+            });
+            activeNodes = [];
+        }
 
         function playSound(type) {
-            initAudio();
+            initAudio(); // Ensure context is ready
+            stopAllSounds(); // STOP EVERYTHING ELSE FIRST
             animateBars();
 
-            // External Sound Files - Raw GitHub URLs
-            const soundFiles = {
-                'gragger': 'https://raw.githubusercontent.com/studio273/osherad_Grogger-/main/SOUNDS/WhatsApp%20Audio%202026-01-14%20at%2011.26.13.mp3',
-                'horn': 'https://raw.githubusercontent.com/studio273/osherad_Grogger-/main/SOUNDS/air-horn-186076.mp3',
-                'cans': 'https://raw.githubusercontent.com/studio273/osherad_Grogger-/main/SOUNDS/falling-can-1-401154.mp3',
-                'drill': 'https://raw.githubusercontent.com/studio273/osherad_Grogger-/main/SOUNDS/bbc_cars--main_07066045.mp3',
-                'cymbals': 'https://raw.githubusercontent.com/studio273/osherad_Grogger-/main/SOUNDS/accoustic-drum-one-shot-overhead-1-447116.mp3'
-            };
-
-            // If it's one of the file-based sounds, play it
-            if (soundFiles[type]) {
-                const audio = new Audio(soundFiles[type]);
-                audio.play().catch(e => console.error("Error playing sound file:", e));
-                return; // Exit function, skipping synth logic
+            // 1. Check if it's a preloaded file
+            if (audioBuffers[type]) {
+                const source = audioCtx.createBufferSource();
+                source.buffer = audioBuffers[type];
+                source.connect(audioCtx.destination);
+                source.start(0);
+                activeNodes.push(source); // Track it to stop later
+                return;
             }
 
-            // Synthesized Sounds (Original Logic)
+            // 2. Synthesized Sounds (For the remaining ones: Truck, Pots, Shaker, Scanner)
             const t = audioCtx.currentTime;
             const mainGain = audioCtx.createGain();
             mainGain.connect(audioCtx.destination);
+            // We don't push mainGain to activeNodes, but we push the sources connected to it.
 
             switch (type) {
                 case 'truck': {
-                    // Realistic Air Horn
                     const truckFund = 220; 
-                    
                     const osc1 = audioCtx.createOscillator();
                     const osc2 = audioCtx.createOscillator();
                     
@@ -500,11 +450,12 @@
                     osc2.start(t);
                     osc1.stop(t + 1.0);
                     osc2.stop(t + 1.0);
+
+                    activeNodes.push(osc1, osc2);
                     break;
                 }
 
                 case 'pots': {
-                    // Metallic Clank (FM Synthesis)
                     const metalOsc = audioCtx.createOscillator(); 
                     metalOsc.type = 'sine'; 
                     metalOsc.frequency.value = 600;
@@ -526,18 +477,23 @@
                     
                     metalOsc.start(t); metalMod.start(t);
                     metalOsc.stop(t + 0.4); metalMod.stop(t + 0.4);
+                    activeNodes.push(metalOsc, metalMod);
                     break;
                 }
 
                 case 'shaker': {
-                    // Double shake
                     createNoise(t, 0.08, 0.3, 'bandpass', 4000);
-                    setTimeout(() => createNoise(audioCtx.currentTime, 0.12, 0.5, 'bandpass', 4000), 120);
+                    setTimeout(() => {
+                        // Check if we are still playing (activeNodes implies user intent, though timeouts are tricky)
+                        // Ideally we'd cancel timeout, but for short sounds it's okay. 
+                        // To be strict, we call playSound again, but helper functions are local.
+                        // We will just let the noise helper add to activeNodes.
+                        if(audioCtx.state === 'running') createNoise(audioCtx.currentTime, 0.12, 0.5, 'bandpass', 4000);
+                    }, 120);
                     break;
                 }
 
                 case 'scanner': {
-                    // Supermarket Beep
                     const beep = audioCtx.createOscillator();
                     beep.type = 'sine';
                     beep.frequency.value = 2250;
@@ -550,20 +506,18 @@
                     
                     beep.start(t);
                     beep.stop(t + 0.15);
+                    activeNodes.push(beep);
                     break;
                 }
             }
         }
 
-        // --- Helper Functions for Noise ---
-        
+        // --- Helper for Noise ---
         function createNoiseSource() {
             const bufferSize = 2 * audioCtx.sampleRate;
             const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
             const output = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                output[i] = Math.random() * 2 - 1;
-            }
+            for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
             const noise = audioCtx.createBufferSource();
             noise.buffer = noiseBuffer;
             return noise;
@@ -590,9 +544,10 @@
             
             noise.start(startTime);
             noise.stop(startTime + duration);
+            activeNodes.push(noise);
         }
 
-        // Visual Animation
+        // Animation
         function animateBars() {
             const bars = document.querySelectorAll('.bar');
             bars.forEach((bar, index) => {
@@ -609,6 +564,10 @@
             const colors = ['#0d1f43', '#1a9bd2', '#cf242b'];
             return colors[Math.floor(Math.random() * colors.length)];
         }
+
+        // Init Audio on first interaction to allow browser to play sound
+        document.body.addEventListener('click', initAudio, { once: true });
+        document.body.addEventListener('touchstart', initAudio, { once: true });
 
         document.querySelectorAll('button').forEach(btn => {
             btn.addEventListener('touchstart', (e) => {
