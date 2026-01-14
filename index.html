@@ -280,18 +280,33 @@
                 <span class="label">ביפ קופה</span>
             </button>
             <button class="sound-btn btn-drill" onclick="playSound('drill')" aria-label="רעש מקדחה">
-                <!-- Electric Drill SVG -->
-                <svg width="70" height="70" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <!-- Handle (Dark Blue) -->
-                     <path d="M5 11V19C5 20.1 5.9 21 7 21H10C11.1 21 12 20.1 12 19V14H14V12H16V6C16 4.9 15.1 4 14 4H7C5.9 4 5 4.9 5 6V11Z" fill="#0d1f43"/>
-                     <!-- Motor Housing (Light Blue) -->
-                     <path d="M5 6C5 4.9 5.9 4 7 4H14C15.1 4 16 4.9 16 6V9H5V6Z" fill="#1a9bd2"/>
-                     <!-- Chuck (Red) -->
-                     <rect x="16" y="5" width="2" height="5" rx="0.5" fill="#cf242b"/>
-                     <!-- Drill Bit (Red) -->
-                     <rect x="18" y="7" width="4" height="1" fill="#cf242b"/>
-                     <!-- Trigger (Red) -->
-                     <path d="M12 11H13V13H12V11Z" fill="#cf242b"/>
+                <!-- Exact Shape Electric Drill SVG -->
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Battery Base (Dark Blue) - Wide and flat -->
+                    <path d="M8 17H13.5L14 18.5V21C14 21.6 13.6 22 13 22H9C8.4 22 8 21.6 8 21V18.5L8 17Z" fill="#0d1f43"/>
+                    
+                    <!-- Handle (Dark Blue) - Ergonomic curve -->
+                    <path d="M10 11L9 17H13.5L14 11H10Z" fill="#0d1f43"/>
+                    
+                    <!-- Main Body (Light Blue) - Strong horizontal shape -->
+                    <path d="M5.5 5H16.5C17.5 5 18 5.5 18 7V9.5C18 10.5 17.5 11 16.5 11H5.5V5Z" fill="#1a9bd2"/>
+                    
+                    <!-- Chuck (Front) (Red and Dark Blue) -->
+                    <path d="M18 6.5H20C20.6 6.5 21 6.9 21 7.5V9C20.5 9.6 20.1 10 19.5 10H18V6.5Z" fill="#cf242b"/>
+                    <rect x="18" y="7" width="1" height="2.5" fill="#0d1f43" fill-opacity="0.4"/>
+                    
+                    <!-- Torque Ring (Red) -->
+                    <rect x="16" y="5.5" width="2" height="5.5" rx="0.5" fill="#cf242b"/>
+                    
+                    <!-- Trigger (Red) -->
+                    <path d="M13.5 11.5H11.5V13.5C11.5 14 12 14.5 12.5 14.5C13 14.5 13.5 14 13.5 13.5V11.5H13.5Z" fill="#cf242b"/>
+                    
+                    <!-- Vents (White detail) -->
+                    <rect x="7" y="6" width="3" height="1" rx="0.5" fill="white" fill-opacity="0.5"/>
+                    <rect x="7" y="8" width="3" height="1" rx="0.5" fill="white" fill-opacity="0.5"/>
+                    
+                    <!-- Logo/Detail on side (Dark Blue) -->
+                    <circle cx="12" cy="8" r="1.5" fill="#0d1f43" fill-opacity="0.2"/>
                 </svg>
                 <span class="label">רעש מקדחה</span>
             </button>
@@ -553,29 +568,56 @@
                 }
 
                 case 'drill': {
-                    // Electric Motor (Sawtooth + LFO + Noise)
-                    const motor = audioCtx.createOscillator();
-                    motor.type = 'sawtooth';
-                    motor.frequency.setValueAtTime(100, t);
-                    motor.frequency.linearRampToValueAtTime(250, t + 0.8); // Rev up
+                    // Hyper-Realistic Electric Drill v5
+                    // Uses multiple oscillators for motor whine, gear crunch, and inertia
+                    const duration = 1.0;
                     
-                    // Vibration LFO
-                    const lfo = audioCtx.createOscillator();
-                    lfo.frequency.value = 40;
-                    const lfoGain = audioCtx.createGain();
-                    lfoGain.gain.value = 30;
-                    lfo.connect(lfoGain);
-                    lfoGain.connect(motor.frequency);
+                    // 1. DC Motor Whine (Triangle wave with rapid pitch envelope)
+                    const whine = audioCtx.createOscillator();
+                    whine.type = 'triangle';
+                    whine.frequency.setValueAtTime(100, t);
+                    whine.frequency.exponentialRampToValueAtTime(1500, t + 0.25); // Fast acceleration
                     
-                    motor.connect(mainGain);
-                    lfo.start(t); motor.start(t);
-                    lfo.stop(t+1.0); motor.stop(t+1.0);
+                    const whineGain = audioCtx.createGain();
+                    whineGain.gain.setValueAtTime(0.05, t);
+                    whineGain.gain.linearRampToValueAtTime(0.2, t + 0.1);
+                    whineGain.gain.linearRampToValueAtTime(0, t + duration);
+
+                    whine.connect(whineGain);
+                    whineGain.connect(mainGain);
+                    whine.start(t);
+                    whine.stop(t + duration);
+
+                    // 2. Heavy Gear Grind (Sawtooth + Modulation)
+                    const gear = audioCtx.createOscillator();
+                    gear.type = 'sawtooth';
+                    gear.frequency.setValueAtTime(50, t);
+                    gear.frequency.linearRampToValueAtTime(400, t + 0.3); // Follows rpm
                     
-                    // Add grinding noise
-                    createNoise(t, 1.0, 0.2, 'lowpass', 1000);
+                    const gearGain = audioCtx.createGain();
+                    gearGain.gain.setValueAtTime(0.4, t);
+                    gearGain.gain.linearRampToValueAtTime(0.3, t + duration - 0.2);
+                    gearGain.gain.linearRampToValueAtTime(0, t + duration);
+
+                    // Ring Modulator for grit
+                    const mod = audioCtx.createOscillator();
+                    mod.type = 'square';
+                    mod.frequency.value = 110; 
+                    const modGain = audioCtx.createGain();
+                    modGain.gain.value = 0.5;
+                    mod.connect(modGain);
+                    modGain.connect(gearGain.gain);
+                    mod.start(t); mod.stop(t + duration);
+
+                    gear.connect(gearGain);
+                    gearGain.connect(mainGain);
+                    gear.start(t);
+                    gear.stop(t + duration);
                     
-                    mainGain.gain.setValueAtTime(0.3, t);
-                    mainGain.gain.linearRampToValueAtTime(0, t + 1.0);
+                    // 3. Air/Fan Noise (Filtered Noise)
+                    createNoise(t, duration, 0.5, 'lowpass', 1500);
+                    
+                    mainGain.gain.setValueAtTime(1.0, t);
                     break;
                 }
 
