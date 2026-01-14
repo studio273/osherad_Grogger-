@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>המשחק המרעיש</title>
+    <!-- Import Google Font (Assistant) for Hebrew support similar to Google Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Strict Brand Palette */
+            --primary-color: #0d1f43;    /* Main: Dark Blue */
+            --secondary-color: #1a9bd2;  /* Secondary: Light Blue */
+            --tertiary-color: #cf242b;   /* Tertiary: Red */
+            --bg-color: #f4f6f8;         /* Neutral light background */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            /* Updated Font Family to Google Sans style */
+            font-family: 'Google Sans', 'Assistant', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            user-select: none;
+            -webkit-user-select: none;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background Canvas for Confetti */
+        #confetti-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 25px rgba(13, 31, 67, 0.15); /* Shadow using primary color */
+            max-width: 95%;
+            width: 500px; /* Widened slightly for 3 columns */
+            z-index: 1;
+            position: relative;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(13, 31, 67, 0.1);
+        }
+
+        .logo-img {
+            max-width: 250px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+        }
+
+        .brand-text {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 0.5rem 0 1rem 0;
+            letter-spacing: -1.5px;
+            line-height: 1;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
+
+        .festive-text {
+            font-size: 1.1rem;
+            color: var(--tertiary-color);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Changed to 3 columns */
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .sound-btn {
+            aspect-ratio: 1;
+            border: none;
+            border-radius: 1rem;
+            font-size: 2.5rem; /* Slightly smaller icon to fit */
+            cursor: pointer;
+            transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            background: #f3f4f6; 
+            box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white; 
+        }
+
+        .sound-btn:active, .sound-btn.playing {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 rgba(0,0,0,0);
+        }
+
+        .sound-btn span.label {
+            font-size: 0.8rem; /* Slightly smaller label font */
+            margin-top: 0.3rem;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* Styles using ONLY the 3 strict colors */
+        
+        /* Red Buttons */
+        .btn-truck, .btn-drill, .btn-cans { 
+            background: var(--tertiary-color); 
+            box-shadow: 0 4px 0 #a01b20; 
+        }
+        .btn-truck:active, .btn-drill:active, .btn-cans:active { box-shadow: 0 0 0 #a01b20; }
+
+        /* Light Blue Buttons */
+        .btn-horn, .btn-scanner, .btn-cymbals { 
+            background: var(--secondary-color); 
+            box-shadow: 0 4px 0 #127ba8; 
+        }
+        .btn-horn:active, .btn-scanner:active, .btn-cymbals:active { box-shadow: 0 0 0 #127ba8; }
+
+        /* Dark Blue Buttons */
+        .btn-pots, .btn-shaker, .btn-gragger { 
+            background: var(--primary-color); 
+            box-shadow: 0 4px 0 #07122a; 
+        }
+        .btn-pots:active, .btn-shaker:active, .btn-gragger:active { box-shadow: 0 0 0 #07122a; }
+
+
+        .visualizer {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 1rem;
+        }
+
+        .bar {
+            width: 10px;
+            height: 10px;
+            background-color: #cbd5e1;
+            border-radius: 5px;
+            transition: height 0.1s;
+        }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="container">
+        <img src="https://i.ibb.co/Mkkwg3Kb/Screenshot-2026-01-12-at-12-54-47.png" alt="לוגו המרעישון" class="logo-img">
+        <div class="brand-text">הרעשן של אושר עד</div>
+        <div class="festive-text">🎭 פורים שמח ומבדח! 🎭</div>
+        
+        <div class="grid">
+            <!-- Row 1 -->
+            <button class="sound-btn btn-truck" onclick="playSound('truck')" aria-label="צפצוף משאית">
+                🚚
+                <span class="label">צפצוף משאית</span>
+            </button>
+            <button class="sound-btn btn-horn" onclick="playSound('horn')" aria-label="זמבורה">
+                📣
+                <span class="label">זמבורה</span>
+            </button>
+            <button class="sound-btn btn-pots" onclick="playSound('pots')" aria-label="מצקות על סיר">
+                🍲
+                <span class="label">מצקות על סיר</span>
+            </button>
+
+            <!-- Row 2 -->
+            <button class="sound-btn btn-shaker" onclick="playSound('shaker')" aria-label="ניעור תבלינים">
+                🧂
+                <span class="label">ניעור תבלינים</span>
+            </button>
+            <button class="sound-btn btn-scanner" onclick="playSound('scanner')" aria-label="ביפ קופה">
+                🛒
+                <span class="label">ביפ קופה</span>
+            </button>
+            <button class="sound-btn btn-drill" onclick="playSound('drill')" aria-label="רעש מקדחה">
+                🪚
+                <span class="label">רעש מקדחה</span>
+            </button>
+
+            <!-- Row 3 -->
+            <button class="sound-btn btn-gragger" onclick="playSound('gragger')" aria-label="רעשן">
+                <!-- Solid Filled Ra'ashan Shape -->
+                <svg width="55" height="55" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Handle (Dark Blue) -->
+                    <path d="M10.5 13V20C10.5 21.1 11.4 22 12.5 22C13.6 22 14.5 21.1 14.5 20V13" fill="#0d1f43"/>
+                    
+                    <!-- Gear Axis (Red) -->
+                    <circle cx="12.5" cy="8.5" r="2.5" fill="#cf242b"/>
+                    
+                    <!-- Main Box Body (Light Blue) -->
+                    <path d="M19.5 4H5.5C4.4 4 3.5 4.9 3.5 6V11C3.5 12.1 4.4 13 5.5 13H19.5C20.6 13 21.5 12.1 21.5 11V6C21.5 4.9 20.6 4 19.5 4Z" fill="#1a9bd2"/>
+                    
+                    <!-- Box Detail/Highlights (Lighter Blue or Darker Blue) -->
+                    <rect x="5.5" y="6" width="14" height="2" rx="1" fill="#FFFFFF" fill-opacity="0.3"/>
+                    <rect x="5.5" y="9" width="14" height="2" rx="1" fill="#FFFFFF" fill-opacity="0.3"/>
+
+                    <!-- The Flapper/Tongue (Red) -->
+                    <path d="M12.5 4V2" stroke="#cf242b" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <span class="label">רעשן</span>
+            </button>
+            <button class="sound-btn btn-cymbals" onclick="playSound('cymbals')" aria-label="מצילתיים">
+                📀
+                <span class="label">מצילתיים</span>
+            </button>
+            <button class="sound-btn btn-cans" onclick="playSound('cans')" aria-label="קופסאות שימורים">
+                🥫
+                <span class="label">קופסאות שימורים</span>
+            </button>
+        </div>
+
+        <div class="visualizer" id="visualizer">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- Confetti Logic ---
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        
+        // STRICT Color Palette for Confetti
+        const confettiColors = ['#0d1f43', '#1a9bd2', '#cf242b'];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * canvas.height; // Start scattered
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = -20;
+                this.size = Math.random() * 8 + 5;
+                this.speedY = Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * 1;
+                this.color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = (Math.random() - 0.5) * 5;
+                this.shape = Math.random() > 0.5 ? 'square' : 'circle';
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.01) + this.speedX;
+                this.rotation += this.rotationSpeed;
+
+                if (this.y > canvas.height + 20) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.fillStyle = this.color;
+                
+                if (this.shape === 'square') {
+                    ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+                } else {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size/2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                ctx.restore();
+            }
+        }
+
+        function initConfetti() {
+            particles = [];
+            for(let i = 0; i < 50; i++) {
+                particles.push(new Particle());
+            }
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateConfetti);
+        }
+
+        initConfetti();
+
+        // --- Audio Context Setup ---
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // --- Sound Generation Functions (Synthesizers) ---
+
+        function playSound(type) {
+            initAudio();
+            animateBars();
+
+            const t = audioCtx.currentTime;
+            const gain = audioCtx.createGain();
+            gain.connect(audioCtx.destination);
+
+            switch (type) {
+                case 'truck':
+                    // Realistic Air Horn: Two Sawtooth waves tuned to a dissonance (Perfect 4th approx)
+                    // This creates that "blaring" powerful truck sound
+                    const truckFund = 220; // Base frequency (A3)
+                    
+                    const osc1 = audioCtx.createOscillator();
+                    const osc2 = audioCtx.createOscillator();
+                    
+                    osc1.type = 'sawtooth';
+                    osc2.type = 'sawtooth';
+                    
+                    osc1.frequency.setValueAtTime(truckFund, t);
+                    osc2.frequency.setValueAtTime(truckFund * 1.25, t); // Major 3rd interval
+                    
+                    // Add a slight pitch drop at the end for realism
+                    osc1.frequency.linearRampToValueAtTime(truckFund - 20, t + 0.8);
+                    osc2.frequency.linearRampToValueAtTime((truckFund * 1.25) - 20, t + 0.8);
+
+                    // Lowpass filter to make it sound "heavy" and not too buzzy
+                    const filter = audioCtx.createBiquadFilter();
+                    filter.type = 'lowpass';
+                    filter.frequency.value = 2500;
+
+                    osc1.connect(filter);
+                    osc2.connect(filter);
+                    filter.connect(gain);
+
+                    // Envelope: Fast attack, steady sustain, release
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(0.5, t + 0.05);
+                    gain.gain.setValueAtTime(0.5, t + 0.6);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 1.0);
+
+                    osc1.start(t);
+                    osc2.start(t);
+                    osc1.stop(t + 1.0);
+                    osc2.stop(t + 1.0);
+                    break;
+
+                case 'horn':
+                    // High pitched sawtooth with a slide down
+                    const hornOsc = audioCtx.createOscillator();
+                    hornOsc.type = 'sawtooth';
+                    hornOsc.frequency.setValueAtTime(600, t);
+                    hornOsc.frequency.linearRampToValueAtTime(500, t + 0.8);
+                    hornOsc.connect(gain);
+                    gain.gain.setValueAtTime(0.4, t);
+                    gain.gain.linearRampToValueAtTime(0, t + 0.8);
+                    hornOsc.start(t); hornOsc.stop(t + 0.8);
+                    break;
+
+                case 'pots':
+                    // Metallic sound using FM synthesis
+                    const potOsc = audioCtx.createOscillator(); potOsc.type = 'sine'; potOsc.frequency.value = 800;
+                    const potMod = audioCtx.createOscillator(); potMod.type = 'square'; potMod.frequency.value = 540;
+                    const potModGain = audioCtx.createGain(); potModGain.gain.value = 800;
+                    potMod.connect(potModGain); potModGain.connect(potOsc.frequency);
+                    potOsc.connect(gain);
+                    gain.gain.setValueAtTime(0.6, t);
+                    gain.gain.exponentialRampToValueAtTime(0.01, t + 0.6);
+                    potOsc.start(t); potMod.start(t);
+                    potOsc.stop(t + 0.6); potMod.stop(t + 0.6);
+                    break;
+
+                case 'shaker':
+                    // Short burst of white noise
+                    createNoise(t, 0.1, 0.4);
+                    break;
+
+                case 'scanner':
+                    // High pitched short sine wave beep
+                    const beepOsc = audioCtx.createOscillator();
+                    beepOsc.type = 'sine';
+                    beepOsc.frequency.value = 2200;
+                    beepOsc.connect(gain);
+                    gain.gain.setValueAtTime(0.4, t);
+                    gain.gain.linearRampToValueAtTime(0, t + 0.08);
+                    beepOsc.start(t); beepOsc.stop(t + 0.08);
+                    break;
+
+                case 'drill':
+                    // Sawtooth wave with fast FM for "grinding" sound
+                    const drillOsc = audioCtx.createOscillator(); drillOsc.type = 'sawtooth'; drillOsc.frequency.value = 200;
+                    const drillMod = audioCtx.createOscillator(); drillMod.type = 'triangle'; drillMod.frequency.value = 40;
+                    const drillModGain = audioCtx.createGain(); drillModGain.gain.value = 100;
+                    drillMod.connect(drillModGain); drillModGain.connect(drillOsc.frequency);
+                    drillOsc.connect(gain);
+                    gain.gain.setValueAtTime(0.3, t);
+                    gain.gain.linearRampToValueAtTime(0, t + 1.2);
+                    drillOsc.start(t); drillMod.start(t);
+                    drillOsc.stop(t + 1.2); drillMod.stop(t + 1.2);
+                    break;
+
+                case 'gragger':
+                    // Series of short clicks
+                    for(let i=0; i<10; i++) {
+                        createNoise(t + (i * 0.08), 0.03, 0.3);
+                    }
+                    break;
+
+                case 'cymbals':
+                    // Long burst of filtered noise with a sharp attack
+                    const cymbalNoise = createNoiseSource();
+                    const cymbalFilter = audioCtx.createBiquadFilter();
+                    cymbalFilter.type = 'highpass';
+                    cymbalFilter.frequency.value = 2000;
+                    cymbalNoise.connect(cymbalFilter);
+                    cymbalFilter.connect(gain);
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(0.6, t + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.01, t + 2.0);
+                    cymbalNoise.start(t); cymbalNoise.stop(t + 2.0);
+                    break;
+
+                case 'cans':
+                    // Metallic, hollow sound (FM synthesis, higher pitch than pots)
+                    const canOsc = audioCtx.createOscillator(); canOsc.type = 'sine'; canOsc.frequency.value = 1200;
+                    const canMod = audioCtx.createOscillator(); canMod.type = 'triangle'; canMod.frequency.value = 950;
+                    const canModGain = audioCtx.createGain(); canModGain.gain.value = 500;
+                    canMod.connect(canModGain); canModGain.connect(canOsc.frequency);
+                    canOsc.connect(gain);
+                    gain.gain.setValueAtTime(0.5, t);
+                    gain.gain.exponentialRampToValueAtTime(0.01, t + 0.3);
+                    canOsc.start(t); canMod.start(t);
+                    canOsc.stop(t + 0.3); canMod.stop(t + 0.3);
+                    break;
+            }
+        }
+
+        // --- Helper Functions for Noise ---
+        
+        function createNoiseSource() {
+            const bufferSize = 2 * audioCtx.sampleRate;
+            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = noiseBuffer;
+            return noise;
+        }
+
+        function createNoise(startTime, duration, volume) {
+            const noise = createNoiseSource();
+            const noiseGain = audioCtx.createGain();
+            noise.connect(noiseGain);
+            noiseGain.connect(audioCtx.destination);
+            
+            noiseGain.gain.setValueAtTime(volume, startTime);
+            noiseGain.gain.linearRampToValueAtTime(0, startTime + duration);
+            
+            noise.start(startTime);
+            noise.stop(startTime + duration);
+        }
+
+        // function createSparkle(startTime, freq) { ... } // Removed as not needed anymore
+        // function createBubble(startTime, freq) { ... } // Removed as not needed anymore
+
+        // Visual Animation - Strict Colors
+        function animateBars() {
+            const bars = document.querySelectorAll('.bar');
+            bars.forEach((bar, index) => {
+                bar.style.height = Math.random() * 40 + 10 + 'px';
+                bar.style.backgroundColor = getRandomColor();
+                setTimeout(() => {
+                    bar.style.height = '10px';
+                    bar.style.backgroundColor = '#cbd5e1';
+                }, 200 + (index * 50));
+            });
+        }
+
+        function getRandomColor() {
+            const colors = ['#0d1f43', '#1a9bd2', '#cf242b'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                btn.click();
+                btn.classList.add('playing');
+                setTimeout(() => btn.classList.remove('playing'), 100);
+            }, {passive: false});
+        });
+
+    </script>
+</body>
+</html>
